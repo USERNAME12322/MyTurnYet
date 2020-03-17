@@ -166,12 +166,12 @@
                                     <SortedDescendingHeaderStyle BackColor="#6F8DAE"></SortedDescendingHeaderStyle>
 
                                     <Columns>
-                                        <asp:TemplateField>
+                                       <%-- <asp:TemplateField>
                                             <ItemTemplate>
                                                 <asp:LinkButton runat="server" ID="lbl_delete"
                                                     CommandArgument='<%# Eval("ID") %>' CommandName="DeleteRow">Ta Bort</asp:LinkButton>
                                             </ItemTemplate>
-                                        </asp:TemplateField>
+                                        </asp:TemplateField>--%>
                                         <asp:BoundField DataField="FName" HeaderText="Barnets Förnamn" SortExpression="FName"></asp:BoundField>
                                         <asp:BoundField DataField="LName" HeaderText="Barnets Efternamn" SortExpression="LName"></asp:BoundField>
                                         <asp:BoundField DataField="Age" HeaderText="Barnets Ålder" SortExpression="Age"></asp:BoundField>
