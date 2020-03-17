@@ -74,7 +74,7 @@ namespace MyTurnYet.Pages
                         ID = createAccount.Gen();
                         Fill_Grid();
                         SqlConnection myConnection = new SqlConnection(Database.Connectionstring.con);
-                        string Add_query = "INSERT into SignUp_Children(ID, FID, FName, LName, Age, Status)" + "VALUES (@ID,@FID, @FName, @LName, @Age, @Status)";
+                        string Add_query = "INSERT into SignUp_Children(ID, FID, FName, LName, Age, Status, Time)" + "VALUES (@ID,@FID, @FName, @LName, @Age, @Status, @Time)";
                         SqlCommand myCommand = new SqlCommand(Add_query, sql2);
                         myCommand.Parameters.AddWithValue("@ID", ID);
                         myCommand.Parameters.AddWithValue("@FID", _FID);
@@ -83,7 +83,6 @@ namespace MyTurnYet.Pages
                         myCommand.Parameters.AddWithValue("@Age", age.Value);
                         myCommand.Parameters.AddWithValue("@Status", "F");
                         myCommand.Parameters.AddWithValue("@Time", time);
-                        myCommand.Parameters.AddWithValue("@Status", "F");
                         myConnection.Open();
                         myCommand.Connection = myConnection;
                         myCommand.ExecuteNonQuery();
@@ -184,7 +183,7 @@ namespace MyTurnYet.Pages
             using (SqlConnection sql2 = new SqlConnection(Database.Connectionstring.con))
             {
                 sql2.Open();
-                String query = "select ID, FName, LName, Age, Status from SignUp_Children where (FID = '" + _FID + "') AND (Status = '" + _status + "');";
+                String query = "select ID, FName, LName, Age, Status, Time  from SignUp_Children where (FID = '" + _FID + "') AND (Status = '" + _status + "');";
                 //string AllChildrenQuery = "select ID,FName,LName,Age from SignUp_Children";
                 SqlCommand cmd2 = new SqlCommand(query, sql2);
                 SqlDataAdapter sqlda = new SqlDataAdapter();
@@ -219,7 +218,7 @@ namespace MyTurnYet.Pages
             using (SqlConnection sql2 = new SqlConnection(Database.Connectionstring.con))
             {
                 sql2.Open();
-                String query = "select ID, FName, LName, Age, Status from SignUp_Children where (FID = '" + _FID + "') AND (Status = '" + New_Status + "');";
+                String query = "select ID, FName, LName, Age, Status, Time from SignUp_Children where (FID = '" + _FID + "') AND (Status = '" + New_Status + "');";
                 //string AllChildrenQuery = "select ID,FName,LName,Age from SignUp_Children";
                 SqlCommand cmd2 = new SqlCommand(query, sql2);
                 SqlDataAdapter sqlda = new SqlDataAdapter();
