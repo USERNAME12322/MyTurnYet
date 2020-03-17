@@ -29,6 +29,8 @@ namespace MyTurnYet.Database
                     children.FName = sqlda["FName"].ToString();
                     children.LName = sqlda["LName"].ToString();
                     children.Age = Convert.ToInt32(sqlda["Age"]);
+                    children.Time = sqlda["Time"].ToString();
+                    children.EST = sqlda["EST"].ToString();
                     listChildrens.Add(children);
                 }
             }
@@ -50,6 +52,8 @@ namespace MyTurnYet.Database
                     children.FName = sqlda["FName"].ToString();
                     children.LName = sqlda["LName"].ToString();
                     children.Age = Convert.ToInt32(sqlda["Age"]);
+                    children.Time = sqlda["Time"].ToString();
+                    children.EST = sqlda["EST"].ToString();
                     listChildrens.Add(children);
                 }
             }
@@ -73,6 +77,8 @@ namespace MyTurnYet.Database
                     children.LName = sqlda["LName"].ToString();
                     children.Age = Convert.ToInt32(sqlda["Age"]);
                     children.Status = sqlda["Status"].ToString();
+                    children.Time = sqlda["Time"].ToString();
+                    children.EST = sqlda["EST"].ToString();
                     listChildren.Add(children);
                 }
             }
@@ -96,6 +102,8 @@ namespace MyTurnYet.Database
                     children.LName = sqlda["LName"].ToString();
                     children.Age = Convert.ToInt32(sqlda["Age"]);
                     children.Status = sqlda["Status"].ToString();
+                    children.Time = sqlda["Time"].ToString();
+                    children.EST = sqlda["EST"].ToString();
                     listChildren.Add(children);
                 }
             }
@@ -170,5 +178,7 @@ namespace MyTurnYet.Database
         public string LName { get; set; }
         public string Status { get; set; }
         public int Age { get; set; }
+        public string Time { get; set; }
+        public string EST { get; set; }
     }
 }

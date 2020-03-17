@@ -69,6 +69,7 @@ namespace MyTurnYet.Pages
                 {
                     using (SqlConnection sql2 = new SqlConnection(Database.Connectionstring.con))
                     {
+                        var time = DateTime.Now;
                         var _s = ID;
                         ID = createAccount.Gen();
                         Fill_Grid();
@@ -80,6 +81,8 @@ namespace MyTurnYet.Pages
                         myCommand.Parameters.AddWithValue("@FName", Fname.Value);
                         myCommand.Parameters.AddWithValue("@LName", Lname.Value);
                         myCommand.Parameters.AddWithValue("@Age", age.Value);
+                        myCommand.Parameters.AddWithValue("@Status", "F");
+                        myCommand.Parameters.AddWithValue("@Time", time);
                         myCommand.Parameters.AddWithValue("@Status", "F");
                         myConnection.Open();
                         myCommand.Connection = myConnection;
