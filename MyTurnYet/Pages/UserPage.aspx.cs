@@ -15,6 +15,8 @@ namespace MyTurnYet.Pages
         private static Random r = new Random();
         private string ID = "";
         public string _FID = "";
+        public string _status = "F";
+        public string New_Status = "A";
 
         public CreateAccount createAccount = new CreateAccount();
         public DataAccesLayer dataAcces = new DataAccesLayer();
@@ -23,21 +25,18 @@ namespace MyTurnYet.Pages
         {
             if (!IsPostBack)
             {
-                BindGridViewData();
+                BindGridViewData_F();
+                BindGridViewData_A();
                 if (Session["epost"] == null)
                 {
                     Response.Redirect("index.aspx");
                     return;
                 }
+                Fill_Grid();
+                EmptyGrid_F();
+                EmptyGrid_A();
             }
             Confirm_Click.ServerClick += Add_Children_Cliked;
-            logut_btn.Click += Logut_btn_Click;
-        }
-
-        private void Logut_btn_Click(object sender, EventArgs e)
-        {
-            Session.Abandon();
-            Response.Redirect("index.aspx");
         }
 
         public void Add_Children_Cliked(object sender, EventArgs e)
@@ -74,13 +73,14 @@ namespace MyTurnYet.Pages
                         ID = createAccount.Gen();
                         Fill_Grid();
                         SqlConnection myConnection = new SqlConnection(Database.Connectionstring.con);
-                        string Add_query = "INSERT into SignUp_Children(ID, FID, FName, LName, Age)" + "VALUES (@ID,@FID, @FName, @LName, @Age)";
+                        string Add_query = "INSERT into SignUp_Children(ID, FID, FName, LName, Age, Status)" + "VALUES (@ID,@FID, @FName, @LName, @Age, @Status)";
                         SqlCommand myCommand = new SqlCommand(Add_query, sql2);
                         myCommand.Parameters.AddWithValue("@ID", ID);
                         myCommand.Parameters.AddWithValue("@FID", _FID);
                         myCommand.Parameters.AddWithValue("@FName", Fname.Value);
                         myCommand.Parameters.AddWithValue("@LName", Lname.Value);
                         myCommand.Parameters.AddWithValue("@Age", age.Value);
+                        myCommand.Parameters.AddWithValue("@Status", "F");
                         myConnection.Open();
                         myCommand.Connection = myConnection;
                         myCommand.ExecuteNonQuery();
@@ -89,8 +89,10 @@ namespace MyTurnYet.Pages
                         Clear();
                         ScriptManager.RegisterStartupScript(this.Page, Page.GetType(), "text", "alert('Barnet har lagts till!')", true);
                         Fill_Grid();
-                        EmptyGrid();
-                        BindGridViewData();
+                        EmptyGrid_F();
+                        EmptyGrid_A();
+                        BindGridViewData_F();
+                        BindGridViewData_A();
                     }
                 }
             }
@@ -174,14 +176,14 @@ namespace MyTurnYet.Pages
             #endregion GetChildrenInfo
         }
 
-        public void EmptyGrid()
+        public void EmptyGrid_F()
         {
             using (SqlConnection sql2 = new SqlConnection(Database.Connectionstring.con))
             {
                 sql2.Open();
-                string ChildrensInfoQuery = "select ID,FName,LName,Age from SignUp_Children where FID ='" + _FID + "'";
+                String query = "select ID, FName, LName, Age, Status from SignUp_Children where (FID = '" + _FID + "') AND (Status = '" + _status + "');";
                 //string AllChildrenQuery = "select ID,FName,LName,Age from SignUp_Children";
-                SqlCommand cmd2 = new SqlCommand(ChildrensInfoQuery, sql2);
+                SqlCommand cmd2 = new SqlCommand(query, sql2);
                 SqlDataAdapter sqlda = new SqlDataAdapter();
                 sqlda.SelectCommand = cmd2;
                 DataSet ds = new DataSet();
@@ -194,7 +196,7 @@ namespace MyTurnYet.Pages
                     //lbl_4.Text = "Var vänligt och klicka på ta bort om barnet har hämtats!";
                     //lbl_4.ForeColor = System.Drawing.Color.Green;
                     notfound_img.ImageUrl = "";
-                    BindGridViewData();
+                    BindGridViewData_F();
                     return;
                 }
                 else
@@ -209,11 +211,53 @@ namespace MyTurnYet.Pages
             }
         }
 
-        public void BindGridViewData()
+        public void EmptyGrid_A()
+        {
+            using (SqlConnection sql2 = new SqlConnection(Database.Connectionstring.con))
+            {
+                sql2.Open();
+                String query = "select ID, FName, LName, Age, Status from SignUp_Children where (FID = '" + _FID + "') AND (Status = '" + New_Status + "');";
+                //string AllChildrenQuery = "select ID,FName,LName,Age from SignUp_Children";
+                SqlCommand cmd2 = new SqlCommand(query, sql2);
+                SqlDataAdapter sqlda = new SqlDataAdapter();
+                sqlda.SelectCommand = cmd2;
+                DataSet ds = new DataSet();
+                sqlda.Fill(ds);
+                if (ds.Tables[0].Rows.Count > 0)
+                {
+                    Panal_A_Not_Found.Visible = false;
+                    Panal_A_Found.Visible = true;
+                    Label3.Text = "Dina Inlämnade Barn:";
+                    //lbl_4.Text = "Var vänligt och klicka på ta bort om barnet har hämtats!";
+                    //lbl_4.ForeColor = System.Drawing.Color.Green;
+                    Image1.ImageUrl = "";
+                    BindGridViewData_A();
+                    return;
+                }
+                else
+                {
+                    Panal_A_Found.Visible = false;
+                    Panal_A_Not_Found.Visible = true;
+                    Label1.Text = "Det finns inga Inlämnade Barn Just nu!";
+                    Label1.ForeColor = System.Drawing.Color.Red;
+                    Label2.Text = "";
+                    Image1.ImageUrl = "../nodata.png";
+                }
+            }
+        }
+
+        public void BindGridViewData_F()
         {
             dataAcces.GetChildrenByfather();
-            GridView1.DataSource = dataAcces.GetChildrenByFID();
+            GridView1.DataSource = dataAcces.GetChildrenByFIDandF();
             GridView1.DataBind();
+        }
+
+        public void BindGridViewData_A()
+        {
+            dataAcces.GetChildrenByfather();
+            GridView2.DataSource = dataAcces.GetChildrenByFIDandA();
+            GridView2.DataBind();
         }
 
         private void Clear()
@@ -227,9 +271,15 @@ namespace MyTurnYet.Pages
             {
                 dataAcces.DeleteChildren(e.CommandArgument.ToString());
                 Fill_Grid();
-                EmptyGrid();
-                BindGridViewData();
+                EmptyGrid_F();
+                BindGridViewData_F();
             }
+        }
+
+        protected void logut_btn_Click(object sender, EventArgs e)
+        {
+            Session.Abandon();
+            Response.Redirect("index.aspx");
         }
     }
 }

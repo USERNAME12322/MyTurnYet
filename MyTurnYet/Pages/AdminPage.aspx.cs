@@ -16,6 +16,8 @@ namespace MyTurnYet.Pages
         public List<SignUp_Children> children = new List<SignUp_Children>();
 
         public DataAccesLayer data = new DataAccesLayer();
+        public string _status = "F";
+        public string New_Status = "A";
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -24,15 +26,20 @@ namespace MyTurnYet.Pages
                 BindGridViewData();
             }
             EmptyGrid();
+            EmptyGrid_A();
             logut_btn.Click += Logut_btn_Click;
         }
 
         public void BindGridViewData()
         {
-            GridView1.DataSource = data.GetAllChildren();
+            //Hämta barnen med status = F
+            GridView1.DataSource = data.GetAllChildrenwithF();
+            GridView2.DataSource = data.GetAllChildrenwithA();
             Fill_Grid();
             EmptyGrid();
+            EmptyGrid_A();
             GridView1.DataBind();
+            GridView2.DataBind();
         }
 
         private void Logut_btn_Click(object sender, EventArgs e)
@@ -92,12 +99,14 @@ namespace MyTurnYet.Pages
 
         public void EmptyGrid()
         {
+            //Grid1
             using (SqlConnection sql2 = new SqlConnection(Database.Connectionstring.con))
             {
                 sql2.Open();
-                //string ChildrensInfoQuery = "select ID,FName,LName,Age from SignUp_Children where FID ='" + _FID + "'";
-                string AllChildrenQuery = "select ID,FName,LName,Age from SignUp_Children";
-                SqlCommand cmd2 = new SqlCommand(AllChildrenQuery, sql2);
+                //Banret med F
+                string ChildrensInfoQuery_F = "select ID,FName,LName,Age, Status from SignUp_Children where Status ='" + _status + "'";
+                //string AllChildrenQuery = "select ID,FName,LName,Age from SignUp_Children";
+                SqlCommand cmd2 = new SqlCommand(ChildrensInfoQuery_F, sql2);
                 SqlDataAdapter sqlda = new SqlDataAdapter();
                 sqlda.SelectCommand = cmd2;
                 DataSet ds = new DataSet();
@@ -107,7 +116,7 @@ namespace MyTurnYet.Pages
                     Panel_notfound.Visible = false;
                     Panel_found.Visible = true;
                     lbl_3.Text = "Registerade Barn:";
-                    lbl_4.Text = "Var vänligt och klicka på hämtats om barnet har hämtats!";
+                    lbl_4.Text = "Var vänligt och klicka på Bekräfta om barnet har lämnats in!";
                     lbl_4.ForeColor = System.Drawing.Color.Green;
                     notfound_img.ImageUrl = "";
                     return;
@@ -124,13 +133,71 @@ namespace MyTurnYet.Pages
             }
         }
 
+        public void EmptyGrid_A()
+        {
+            //Grid2
+            using (SqlConnection sql3 = new SqlConnection(Database.Connectionstring.con))
+            {
+                sql3.Open();
+                //Banret med A
+                string ChildrensInfoQuery_A = "select ID,FName,LName,Age,Status from SignUp_Children where Status ='" + New_Status + "'";
+                //string AllChildrenQuery = "select ID,FName,LName,Age from SignUp_Children";
+                SqlCommand cmd2 = new SqlCommand(ChildrensInfoQuery_A, sql3);
+                SqlDataAdapter sqlda = new SqlDataAdapter();
+                sqlda.SelectCommand = cmd2;
+                DataSet ds = new DataSet();
+                sqlda.Fill(ds);
+                if (ds.Tables[0].Rows.Count > 0)
+                {
+                    Panel1.Visible = false;
+                    Panel2.Visible = true;
+                    Label3.Text = "Inlämnade Barn:";
+                    Label4.Text = "Var vänligt och klicka på Hämtats om barnet har Hämtats!";
+                    Label4.ForeColor = System.Drawing.Color.Green;
+                    Image1.ImageUrl = "";
+                    return;
+                }
+                else
+                {
+                    Panel2.Visible = false;
+                    Panel1.Visible = true;
+                    Label1.Text = "Det finns inga inlämnade Barn Just nu!";
+                    Label1.ForeColor = System.Drawing.Color.Red;
+                    Label2.Text = "";
+                    Image1.ImageUrl = "../nodata.png";
+                }
+            }
+        }
+
         protected void GridView1_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "DeleteRow")
+            {
+                using (SqlConnection sqlcon = new SqlConnection(Database.Connectionstring.con))
+                {
+                    string Updatestat = "Update SignUp_Children set Status='A' where ID='" + e.CommandArgument.ToString() + "'";
+                    sqlcon.Open();
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.CommandText = Updatestat;
+                    cmd.Connection = sqlcon;
+                    cmd.ExecuteNonQuery();
+                }
+                //data.DeleteChildren(e.CommandArgument.ToString());
+                Fill_Grid();
+                EmptyGrid();
+                EmptyGrid_A();
+                BindGridViewData();
+            }
+        }
+
+        protected void GridView2_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             if (e.CommandName == "DeleteRow")
             {
                 data.DeleteChildren(e.CommandArgument.ToString());
                 Fill_Grid();
                 EmptyGrid();
+                EmptyGrid_A();
                 BindGridViewData();
             }
         }

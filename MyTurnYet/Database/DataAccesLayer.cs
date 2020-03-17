@@ -11,13 +11,15 @@ namespace MyTurnYet.Database
     public class DataAccesLayer
     {
         public string _FID = "";
+        public string _status = "F";
+        public string New_Status = "A";
 
-        public List<SignUp_Children> GetAllChildren()
+        public List<SignUp_Children> GetAllChildrenwithF()
         {
             List<SignUp_Children> listChildrens = new List<SignUp_Children>();
             using (SqlConnection sql = new SqlConnection(Database.Connectionstring.con))
             {
-                SqlCommand cmd = new SqlCommand("Select ID, FName, LName, Age from SignUp_Children", sql);
+                SqlCommand cmd = new SqlCommand("Select ID, FName, LName, Age, Status from SignUp_Children where Status = '" + _status + "'", sql);
                 sql.Open();
                 SqlDataReader sqlda = cmd.ExecuteReader();
                 while (sqlda.Read())
@@ -31,6 +33,73 @@ namespace MyTurnYet.Database
                 }
             }
             return listChildrens;
+        }
+
+        public List<SignUp_Children> GetAllChildrenwithA()
+        {
+            List<SignUp_Children> listChildrens = new List<SignUp_Children>();
+            using (SqlConnection sql = new SqlConnection(Database.Connectionstring.con))
+            {
+                SqlCommand cmd = new SqlCommand("Select ID, FName, LName, Age, Status from SignUp_Children where Status = '" + New_Status + "'", sql);
+                sql.Open();
+                SqlDataReader sqlda = cmd.ExecuteReader();
+                while (sqlda.Read())
+                {
+                    SignUp_Children children = new SignUp_Children();
+                    children.ID = sqlda["ID"].ToString();
+                    children.FName = sqlda["FName"].ToString();
+                    children.LName = sqlda["LName"].ToString();
+                    children.Age = Convert.ToInt32(sqlda["Age"]);
+                    listChildrens.Add(children);
+                }
+            }
+            return listChildrens;
+        }
+
+        public List<SignUp_Children> GetChildrenByFIDandF()
+        {
+            List<SignUp_Children> listChildren = new List<SignUp_Children>();
+            using (SqlConnection sql = new SqlConnection(Database.Connectionstring.con))
+            {
+                String query = "select ID, FName, LName, Age, Status from SignUp_Children where (FID = '" + _FID + "') AND (Status = '" + _status + "');";
+                SqlCommand cmd = new SqlCommand(query, sql);
+                sql.Open();
+                SqlDataReader sqlda = cmd.ExecuteReader();
+                while (sqlda.Read())
+                {
+                    SignUp_Children children = new SignUp_Children();
+                    children.ID = sqlda["ID"].ToString();
+                    children.FName = sqlda["FName"].ToString();
+                    children.LName = sqlda["LName"].ToString();
+                    children.Age = Convert.ToInt32(sqlda["Age"]);
+                    children.Status = sqlda["Status"].ToString();
+                    listChildren.Add(children);
+                }
+            }
+            return listChildren;
+        }
+
+        public List<SignUp_Children> GetChildrenByFIDandA()
+        {
+            List<SignUp_Children> listChildren = new List<SignUp_Children>();
+            using (SqlConnection sql = new SqlConnection(Database.Connectionstring.con))
+            {
+                String query = "select ID, FName, LName, Age, Status from SignUp_Children where (FID = '" + _FID + "') AND (Status = '" + New_Status + "');";
+                SqlCommand cmd = new SqlCommand(query, sql);
+                sql.Open();
+                SqlDataReader sqlda = cmd.ExecuteReader();
+                while (sqlda.Read())
+                {
+                    SignUp_Children children = new SignUp_Children();
+                    children.ID = sqlda["ID"].ToString();
+                    children.FName = sqlda["FName"].ToString();
+                    children.LName = sqlda["LName"].ToString();
+                    children.Age = Convert.ToInt32(sqlda["Age"]);
+                    children.Status = sqlda["Status"].ToString();
+                    listChildren.Add(children);
+                }
+            }
+            return listChildren;
         }
 
         public void GetChildrenByfather()
@@ -56,27 +125,6 @@ namespace MyTurnYet.Database
                     return;
                 }
             }
-        }
-
-        public List<SignUp_Children> GetChildrenByFID()
-        {
-            List<SignUp_Children> listChildren = new List<SignUp_Children>();
-            using (SqlConnection sql = new SqlConnection(Database.Connectionstring.con))
-            {
-                SqlCommand cmd = new SqlCommand("select ID, FName, LName, Age from SignUp_Children where FID = '" + _FID + "'", sql);
-                sql.Open();
-                SqlDataReader sqlda = cmd.ExecuteReader();
-                while (sqlda.Read())
-                {
-                    SignUp_Children children = new SignUp_Children();
-                    children.ID = sqlda["ID"].ToString();
-                    children.FName = sqlda["FName"].ToString();
-                    children.LName = sqlda["LName"].ToString();
-                    children.Age = Convert.ToInt32(sqlda["Age"]);
-                    listChildren.Add(children);
-                }
-            }
-            return listChildren;
         }
 
         public void DeleteChildren(string ChildrenID)
@@ -120,6 +168,7 @@ namespace MyTurnYet.Database
         public string FID { get; set; }
         public string FName { get; set; }
         public string LName { get; set; }
+        public string Status { get; set; }
         public int Age { get; set; }
     }
 }
