@@ -42,7 +42,7 @@ namespace MyTurnYet.Database
             List<SignUp_Children> listChildrens = new List<SignUp_Children>();
             using (SqlConnection sql = new SqlConnection(Database.Connectionstring.con))
             {
-                SqlCommand cmd = new SqlCommand("Select ID, FName, LName, Age, Status from SignUp_Children where Status = '" + New_Status + "'", sql);
+                SqlCommand cmd = new SqlCommand("Select ID, FName, LName, Age, Status, Time, EST from SignUp_Children where Status = '" + New_Status + "'", sql);
                 sql.Open();
                 SqlDataReader sqlda = cmd.ExecuteReader();
                 while (sqlda.Read())
