@@ -19,7 +19,7 @@ namespace MyTurnYet.Database
             List<SignUp_Children> listChildrens = new List<SignUp_Children>();
             using (SqlConnection sql = new SqlConnection(Database.Connectionstring.con))
             {
-                SqlCommand cmd = new SqlCommand("Select ID, FName, LName, Age, Status from SignUp_Children where Status = '" + _status + "'", sql);
+                SqlCommand cmd = new SqlCommand("Select ID, FName, LName, Age, Status, Time, EST from SignUp_Children where Status = '" + _status + "'", sql);
                 sql.Open();
                 SqlDataReader sqlda = cmd.ExecuteReader();
                 while (sqlda.Read())
@@ -65,7 +65,7 @@ namespace MyTurnYet.Database
             List<SignUp_Children> listChildren = new List<SignUp_Children>();
             using (SqlConnection sql = new SqlConnection(Database.Connectionstring.con))
             {
-                String query = "select ID, FName, LName, Age, Status from SignUp_Children where (FID = '" + _FID + "') AND (Status = '" + _status + "');";
+                String query = "select ID, FName, LName, Age, Status, Time, EST from SignUp_Children where (FID = '" + _FID + "') AND (Status = '" + _status + "');";
                 SqlCommand cmd = new SqlCommand(query, sql);
                 sql.Open();
                 SqlDataReader sqlda = cmd.ExecuteReader();
@@ -90,7 +90,7 @@ namespace MyTurnYet.Database
             List<SignUp_Children> listChildren = new List<SignUp_Children>();
             using (SqlConnection sql = new SqlConnection(Database.Connectionstring.con))
             {
-                String query = "select ID, FName, LName, Age, Status from SignUp_Children where (FID = '" + _FID + "') AND (Status = '" + New_Status + "');";
+                String query = "select ID, FName, LName, Age, Status, Time, EST from SignUp_Children where (FID = '" + _FID + "') AND (Status = '" + New_Status + "');";
                 SqlCommand cmd = new SqlCommand(query, sql);
                 sql.Open();
                 SqlDataReader sqlda = cmd.ExecuteReader();
