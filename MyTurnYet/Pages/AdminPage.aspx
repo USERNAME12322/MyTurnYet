@@ -138,6 +138,7 @@
                     <asp:BoundField DataField="FName" HeaderText="Barnets Förnamn" SortExpression="FName"></asp:BoundField>
                     <asp:BoundField DataField="LName" HeaderText="Barnets Efternamn" SortExpression="LName"></asp:BoundField>
                     <asp:BoundField DataField="Age" HeaderText="Barnets Ålder" SortExpression="Age"></asp:BoundField>
+                   <%-- <asp:BoundField DataField="EST" HeaderText="Hämtningstid" SortExpression="EST"></asp:BoundField>--%>
                 </Columns>
             </asp:GridView>
         </div>

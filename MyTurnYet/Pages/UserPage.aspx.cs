@@ -83,6 +83,7 @@ namespace MyTurnYet.Pages
                         myCommand.Parameters.AddWithValue("@Age", age.Value);
                         myCommand.Parameters.AddWithValue("@Status", "F");
                         myCommand.Parameters.AddWithValue("@Time", time);
+                        //myCommand.Parameters.AddWithValue("@EST", "None");
                         myConnection.Open();
                         myCommand.Connection = myConnection;
                         myCommand.ExecuteNonQuery();

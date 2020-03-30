@@ -32,7 +32,7 @@ namespace MyTurnYet.Pages
 
         public void BindGridViewData()
         {
-            //Hämta barnen med status = F
+            //Hämta barnen med status = F och A
             GridView1.DataSource = data.GetAllChildrenwithF();
             GridView2.DataSource = data.GetAllChildrenwithA();
             Fill_Grid();

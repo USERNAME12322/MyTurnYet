@@ -110,6 +110,32 @@ namespace MyTurnYet.Database
             return listChildren;
         }
 
+        public void Limit_Place()
+        {
+            using (SqlConnection sql = new SqlConnection(Database.Connectionstring.con))
+            {
+                String query = "SELECT FName, LName,Age,Status,Time, EST from [SignUp_Children]";
+                SqlCommand cmd = new SqlCommand(query, sql);
+                SqlDataAdapter sds = new SqlDataAdapter();
+                DataSet ds = new DataSet();
+                sds.SelectCommand = cmd;
+                int i = 0;
+                //sds.Fill(ds, "Password");
+                // Om det finns 5 barn registerade (Max antal-lediga platser)
+                if (ds.Tables[i].Rows.Count == 5)
+                {
+                    //if (ds.Tables[i].Rows[i]["UType"].ToString() == "A")
+                    //{
+                    //
+                    //}
+                    //else
+                    //{
+                    //
+                    //}
+                }
+            }
+        }
+
         public void GetChildrenByfather()
         {
             // Get FatherCode (ID)
